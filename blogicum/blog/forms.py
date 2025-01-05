@@ -15,10 +15,16 @@ class EditProfileForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'text', 'pub_date', 'category', 'location', 'image']  # Add all necessary fields
+        fields = ['title',
+                  'text',
+                  'pub_date',
+                  'category',
+                  'location',
+                  'image']
 
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
+        

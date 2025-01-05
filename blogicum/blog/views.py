@@ -42,9 +42,13 @@ def index(request):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post.objects.select_related('category', 'location'), pk=post_id)
+    post = get_object_or_404(Post.objects.
+                             select_related('category', 'location'),
+                             pk=post_id)
 
-    if not post.is_published or post.pub_date > timezone.now() or not post.category.is_published:
+    if (not post.is_published
+            or post.pub_date > timezone.now()
+            or not post.category.is_published):
         if request.user != post.author:
             return HttpResponseNotFound()
 
@@ -140,12 +144,12 @@ def profile(request, username_slug):
     paginator = Paginator(posts, 10)
     page = request.GET.get('page')
     posts = paginator.get_page(page)
-    return render(request, 'blog/profile.html', {'profile': user_profile, 'page_obj': posts})
+    return render(request, 'blog/profile.html',
+                  {'profile': user_profile, 'page_obj': posts})
 
 
 @login_required
 def edit_profile(request):
-    """Редактирование профиля самого залогиненного пользователя."""
     user = request.user
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=user)
@@ -171,7 +175,8 @@ def add_comment(request, post_id):
             return redirect('blog:post_detail', post_id=post_id)
     else:
         form = CommentForm()
-    return render(request, 'blog/detail.html', {'form': form, 'post': post})
+    return render(request, 'blog/detail.html',
+                  {'form': form, 'post': post})
 
 
 @login_required
@@ -193,7 +198,8 @@ def edit_comment(request, post_id, comment_id):
     else:
         form = CommentForm(instance=comment)
 
-    return render(request, 'blog/comment.html', {'form': form, 'comment': comment})
+    return render(request, 'blog/comment.html',
+                  {'form': form, 'comment': comment})
 
 
 @login_required
@@ -213,6 +219,6 @@ def delete_comment(request, post_id, comment_id):
 
     return render(
         request,
-        'blog/comment.html',  # Reusing the existing template for simplicity
+        'blog/comment.html',
         {'post': post, 'comment': comment}
     )
